@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webservlet.api.input.BuildingInput;
+import com.webservlet.api.output.BuildingTypeOutput;
 import com.webservlet.builder.BuildingSearchBuilder;
 import com.webservlet.dto.BuildingDTO;
 import com.webservlet.service.BuildingService;
@@ -30,22 +31,28 @@ public class BuildingServlet extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String action = request.getParameter("action");
+		if (action != null && action.equals("SEARCH_BUILDING")) {
+			BuildingInput buildingInput = FormUtil.toModel(BuildingInput.class, request);
+			BuildingSearchBuilder builder = new BuildingSearchBuilder.Builder()
+					.setName(buildingInput.getName())
+					.setDistrict(buildingInput.getDistrict())
+					.setFloorArea(buildingInput.getFloorArea())
+					.setNumberOfBasement(buildingInput.getNumberOfBasement())
+					.setRentAreaFrom(buildingInput.getRentAreaFrom())
+					.setRentAreaTo(buildingInput.getRentAreaTo())
+					.setRentCostFrom(buildingInput.getRentCostFrom())
+					.setRentCostTo(buildingInput.getRentCostTo())
+					.setTypes(buildingInput.getTypes())
+					.setStaffId(buildingInput.getStaffId())
+					.build();
+			List<BuildingDTO> results = buildingService.findByBuilder(builder);
+			objectMapper.writeValue(response.getOutputStream(), results);
+		} else if(action != null && action.equals("BUILDING_TYPE")){
+			List<BuildingTypeOutput> results = buildingService.getBuildingType();
+			objectMapper.writeValue(response.getOutputStream(), results);
+		}
 		
-		BuildingInput buildingInput = FormUtil.toModel(BuildingInput.class, request);
-		BuildingSearchBuilder builder = new BuildingSearchBuilder.Builder()
-				.setName(buildingInput.getName())
-				.setDistrict(buildingInput.getDistrict())
-				.setFloorArea(buildingInput.getFloorArea())
-				.setNumberOfBasement(buildingInput.getNumberOfBasement())
-				.setRentAreaFrom(buildingInput.getRentAreaFrom())
-				.setRentAreaTo(buildingInput.getRentAreaTo())
-				.setRentCostFrom(buildingInput.getRentCostFrom())
-				.setRentCostTo(buildingInput.getRentCostTo())
-				.setTypes(buildingInput.getTypes())
-				.setStaffId(buildingInput.getStaffId())
-				.build();
-		List<BuildingDTO> results = buildingService.findByBuilder(builder);
-		objectMapper.writeValue(response.getOutputStream(), results);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

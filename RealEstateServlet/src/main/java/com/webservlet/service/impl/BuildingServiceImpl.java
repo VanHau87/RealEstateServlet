@@ -1,6 +1,7 @@
 package com.webservlet.service.impl;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,10 +9,12 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.webservlet.api.output.BuildingTypeOutput;
 import com.webservlet.builder.BuildingSearchBuilder;
 import com.webservlet.converter.BuildingConverter;
 import com.webservlet.dto.BuildingDTO;
 import com.webservlet.entity.BuildingEntity;
+import com.webservlet.enums.BuildingTypeEnum;
 import com.webservlet.repository.BuildingRepository;
 import com.webservlet.repository.impl.BuildingRepositoryImpl;
 import com.webservlet.service.BuildingService;
@@ -61,6 +64,25 @@ public class BuildingServiceImpl implements BuildingService {
 	public Integer saveBuilding(BuildingDTO dto) {
 		Integer buildingId = buildingRepository.insert(BuildingConverter.dto2Entity(dto));
 		return buildingId;
+	}
+	@Override
+	public List<BuildingTypeOutput> getBuildingType() {
+		List<BuildingTypeOutput> results = new ArrayList<BuildingTypeOutput>();
+		for (BuildingTypeEnum item : BuildingTypeEnum.values()) {
+			BuildingTypeOutput type = new BuildingTypeOutput();
+			type.setCode(item.toString());
+			type.setName(item.getValue());
+			results.add(type);
+		}
+		return results;
+	}
+	@Override
+	public Map<String, String> getMapBuildingType() {
+		Map<String, String> results = new HashMap<String, String>();
+		for (BuildingTypeEnum item: BuildingTypeEnum.values()) {
+			results.put(item.toString(), item.getValue());
+		}
+		return results;
 	}
 
 }
