@@ -9,7 +9,7 @@ import com.webservlet.dto.BuildingDTO;
 
 public interface BuildingService {
 	List<BuildingDTO> findByBuilder(BuildingSearchBuilder builder);
-	Integer saveBuilding(BuildingDTO dto);
+	BuildingDTO saveBuilding(BuildingDTO dto);
 	List<BuildingTypeOutput> getBuildingType();
 	Map<String, String> getMapBuildingType();
 }

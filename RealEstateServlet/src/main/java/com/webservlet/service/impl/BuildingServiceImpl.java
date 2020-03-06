@@ -61,9 +61,10 @@ public class BuildingServiceImpl implements BuildingService {
 		return properties;
 	}
 	@Override
-	public Integer saveBuilding(BuildingDTO dto) {
+	public BuildingDTO saveBuilding(BuildingDTO dto) {
 		Integer buildingId = buildingRepository.insert(BuildingConverter.dto2Entity(dto));
-		return buildingId;
+		//TODO findById, return buildingDTO dựa trên buildingId
+		return null;
 	}
 	@Override
 	public List<BuildingTypeOutput> getBuildingType() {
